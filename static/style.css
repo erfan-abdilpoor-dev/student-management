@@ -1,0 +1,85 @@
+body {
+    background: #f2f2f2;
+    font-family: Arial, sans-serif;
+    margin: 30px;
+}
+
+.form,
+.update,
+.delete {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    width: 320px;
+    box-sizing: border-box;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form input,
+.update input,
+.delete input {
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.form button,
+.update button,
+.delete button {
+    padding: 9px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.student-card {
+    background:white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    width: 300px;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+#students-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#student-list {
+    margin-top: 15px;
+}
+
+.student-card:hover {
+    transform:translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.success {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: #d4edda;
+    color: #155724;
+}
+
+.error {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: #f8d7da;
+    color: #721e24;
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello From HTML!</h1>
+        <p>Form</p>
+        <form id="student-form" class="form">
+            <label for="StudentName">Name</label>
+            <input id="StudentName">
+
+            <label for="StudentAge">Age</label>
+            <input id="StudentAge">
+
+            <label for="StudentCode">Code</label>
+            <input id="StudentCode">
+
+            <label for="StudentField">Field</label>
+            <input id="StudentField">
+
+            <button type="submit" id="SubmitStudent">Add Student</button>
+        </form>
+
+        <form id="update-form" class="update">
+
+            <div class="field">
+                <label for="Student-Code">Student Code</label>
+                <input id="Student-Code">
+            </div>
+
+            <div class="field">
+                <label for="student-age">New Student Age</label>
+                <input id="student-age">
+            </div>
+
+            <button id="Update">Update</button>
+
+        </form>
+
+        <div class="delete">
+
+            <div class="field">
+                <label for="Delete-Student-Code">Student Code</label>
+                <input id="Delete-Student-Code">
+            </div>
+
+            <button type="submit" id="Delete">Delete</button>
+
+        </div>
+
+        <h2>Student List</h2>
+        <div id="students-list"></div>
+
+        <div id="flask-message"></div>
+
+        <script src="/static/Script.js"></script>
+</body>
+</html>
