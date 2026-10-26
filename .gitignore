@@ -1,5 +1,9 @@
-students.db
 __pycache__/
+*.py[cod]
 .env
-*.pyc
+.env.*
+!.env.example
+students.db
+*.sqlite
+*.sqlite3
 tempCodeRunnerFile.py

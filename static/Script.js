@@ -1,206 +1,269 @@
+
 const nameInput = document.getElementById("StudentName");
 const ageInput = document.getElementById("StudentAge");
 const codeInput = document.getElementById("StudentCode");
 const fieldInput = document.getElementById("StudentField");
-const button = document.getElementById("SubmitStudent");
+
 const studentForm = document.getElementById("student-form");
-const FlaskMessage = document.getElementById("flask-message");
-const StudentList = document.getElementById("students-list");
-const StudentCode = document.getElementById("Student-Code");
-const StudentAge = document.getElementById("student-age");
-const update = document.getElementById("Update");
 const updateForm = document.getElementById("update-form");
-const DeleteStudentCode = document.getElementById("Delete-Student-Code");
-const DeleteButton = document.getElementById("Delete");
 
-async function loadStudents () {
+const studentCodeInput = document.getElementById("Student-Code");
+const studentAgeInput = document.getElementById("student-age");
+const deleteCodeInput = document.getElementById("Delete-Student-Code");
+
+const studentList = document.getElementById("students-list");
+const message = document.getElementById("flask-message");
+const loginForm = document.getElementById("login-form");
+const loginMessage = document.getElementById("login-message");
+const logoutButton = document.getElementById("logout-button");
+
+function showMessage(element, text, success = false) {
+    element.textContent = text;
+    element.className = success ? "success" : "error";
+}
+
+function setAuthState(isLoggedIn) {
+    const managementArea = document.getElementById("management-area");
+    managementArea.hidden = !isLoggedIn;
+
+    const panelIds = [
+        "add-student-panel",
+        "update-student-panel",
+        "delete-student-panel",
+        "student-section"
+    ];
+
+    for (const id of panelIds) {
+        const panel = document.getElementById(id);
+
+        panel.hidden = !isLoggedIn;
+        panel.classList.toggle("locked", !isLoggedIn);
+
+        panel.querySelectorAll("input, button").forEach((control) => {
+            control.disabled = !isLoggedIn;
+        });
+    }
+
+    logoutButton.disabled = !isLoggedIn;
+
+    document.getElementById("auth-status").textContent = isLoggedIn
+        ? "You are logged in."
+        : "Please log in to manage students.";
+}
+
+async function sendRequest(url, options = {}) {
+    const response = await fetch(url, options);
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        const error = new Error(
+            data.Message || `Request failed: ${response.status}`
+        );
+
+        error.status = response.status;
+        throw error;
+    }
+
+    return data;
+}
+
+async function loadStudents() {
     try {
-        const response = await fetch("/students");
+        const students = await sendRequest("/students");
 
-        if (!response.ok) {
-            throw new Error(`HTTP Error:${response.status}`);
-        }
+        setAuthState(true);
+        studentList.replaceChildren();
 
-        const data = await response.json();
-
-        StudentList.innerHTML = "";
-
-        for(let Student of data) {
+        for (const student of students) {
             const card = document.createElement("div");
-
             card.className = "student-card";
 
-            card.innerHTML = `
-                <h3>${Student.name}</h3>
-                <p>Age:${Student.age}</p>
-                <p>Code:${Student.code}</p>
-                <p>Field:${Student.field}</p>
-            `;
-            StudentList.appendChild(card);
+            const title = document.createElement("h3");
+            title.textContent = student.name;
+
+            const age = document.createElement("p");
+            age.textContent = `Age: ${student.age}`;
+
+            const code = document.createElement("p");
+            code.textContent = `Code: ${student.code}`;
+
+            const field = document.createElement("p");
+            field.textContent = `Field: ${student.field}`;
+
+            card.append(title, age, code, field);
+            studentList.appendChild(card);
         }
-    }catch (error) {
-        console.log("Error:",error.message);
+
+        showMessage(
+            message,
+            `Loaded ${students.length} students.`,
+            true
+        );
+    } catch (error) {
+        studentList.replaceChildren();
+
+        if (error.status === 401) {
+            setAuthState(false);
+            showMessage(message, "Please log in to view students.");
+        } else {
+            showMessage(message, error.message);
+        }
     }
 }
 
-DeleteButton.addEventListener("click", async function(event) {
+// Login
+// Login
+loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
-    if (DeleteStudentCode.value === "") {
-        console.log("Code Is Required.")
-        return;
-    }
 
     try {
-        const response = await fetch("/students/" + DeleteStudentCode.value, {
-        method: "DELETE"
-        });
-
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.Message);
-        }
-            FlaskMessage.className = "success";
-            FlaskMessage.innerHTML = data.Message;
-
-            loadStudents();
-        
-    } catch (error) {
-        FlaskMessage.className = "error";
-            FlaskMessage.innerHTML = error.message;
-    }
-});
-
-
-updateForm.addEventListener("submit",async function(event) {
-    event.preventDefault();
-    if (StudentCode.value === "") {
-        console.log("ID Is Required.")
-        return;
-    }
-
-    if (StudentAge.value === "") {
-        console.log("Age Is Required For Update.")
-        return;
-    }
-
-    try {
-        const response = await fetch("/students/" + StudentCode.value, {
-            method: "PATCH",
-            headers: {
-                "Content-Type":"application/json"
-            },
-            body: JSON.stringify({
-                age:StudentAge.value
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.Message);
-        }
-
-        FlaskMessage.className = "success";
-        FlaskMessage.innerHTML = data.Message;
-
-        loadStudents();
-
-    } catch (error) {
-        FlaskMessage.className = "error";
-        FlaskMessage.innerHTML = error.message;
-    }
-})
-
-
-studentForm.addEventListener("submit", function(event) {
-    event.preventDefault();
-    
-    if (nameInput.value === "") {
-        console.log("Name Is Required.")
-        return;
-    }
-
-    if (ageInput.value === "") {
-        console.log("Age Is Required.")
-        return;
-    }
-
-    if (codeInput.value === ""){
-        console.log("Student Code Required.")
-        return;
-    }
-
-    if (fieldInput.value === ""){
-        console.log("Field Required.")
-        return;
-    }
-
-    console.log(nameInput.value);
-    console.log(ageInput.value);
-    console.log(codeInput.value);
-    console.log(fieldInput.value);
-});
-studentForm.addEventListener("submit",async function(event) {
-    event.preventDefault();
-
-    if (nameInput.value === "") {
-        console.log("Name Is Required.");
-        return;
-    }
-
-    if (ageInput.value === "") {
-        console.log("Age Is Required.");
-        return;
-    }
-
-    if (codeInput.value === "") {
-        console.log("Code Is Required.");
-        return;
-    }
-
-    if (fieldInput.value === "") {
-        console.log("Field Is Required.");
-        return;
-    }
-
-    try {
-        const response = await fetch("/students", {
+        const data = await sendRequest("/login", {
             method: "POST",
             headers: {
-                "Content-Type":"application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                name:nameInput.value,
-                age:ageInput.value,
-                code:codeInput.value,
-                field:fieldInput.value
+                username: document.getElementById("login-username").value,
+                password: document.getElementById("login-password").value
             })
         });
 
-        const data = await response.json();
+        showMessage(loginMessage, data.Message, true);
+        await loadStudents();
+    } catch (error) {
+        showMessage(loginMessage, error.message);
+    }
+});
 
-        if (!response.ok) {
-            throw new Error(data.Message);
+// Logout
+// Logout
+logoutButton.addEventListener("click", async function () {
+    try {
+        const data = await sendRequest("/logout", {
+            method: "POST"
+        });
+
+        setAuthState(false);
+        studentList.replaceChildren();
+
+        showMessage(loginMessage, data.Message, true);
+        showMessage(message, "");
+    } catch (error) {
+        showMessage(loginMessage, error.message);
+
+        if (error.status === 401) {
+            setAuthState(false);
+            studentList.replaceChildren();
         }
-        FlaskMessage.className = "success";
+    }
+});
 
-        FlaskMessage.innerHTML =
-            data.Message + "<br>" +
-            "Name: " + data.Name + "<br>" + 
-            "Age: " + data.Age + "<br>" +
-            "Code:" + data.Code + "<br>" +
-            "Field: " + data.Field;
-        
-        loadStudents();
+// Add student
+studentForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
+    const age = Number(ageInput.value);
+
+    if (
+        !nameInput.value.trim() ||
+        !ageInput.value.trim() ||
+        !codeInput.value.trim() ||
+        !fieldInput.value.trim()
+    ) {
+        showMessage(message, "Please complete all student fields.");
+        return;
+    }
+
+    if (!Number.isInteger(age) || age < 0) {
+        showMessage(message, "Age must be a non-negative integer.");
+        return;
+    }
+
+    try {
+        const data = await sendRequest("/students", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: nameInput.value.trim(),
+                age: age,
+                code: codeInput.value.trim(),
+                field: fieldInput.value.trim()
+            })
+        });
+
+        showMessage(message, data.Message, true);
         studentForm.reset();
+        await loadStudents();
+    } catch (error) {
+        showMessage(message, error.message);
+    }
+});
 
-        }catch (error) {
-            FlaskMessage.className = "error";
+// Update student age
+updateForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-            FlaskMessage.innerHTML = 
-            "Something Went Wrong. " + error.message;
+    const code = studentCodeInput.value.trim();
+    const age = Number(studentAgeInput.value);
+
+    if (!code || !studentAgeInput.value.trim()) {
+        showMessage(message, "Student code and age are required.");
+        return;
+    }
+
+    if (!Number.isInteger(age) || age < 0) {
+        showMessage(message, "Age must be a non-negative integer.");
+        return;
+    }
+
+    try {
+        const data = await sendRequest(
+            `/students/${encodeURIComponent(code)}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ age: age })
+            }
+        );
+
+        showMessage(message, data.Message, true);
+        await loadStudents();
+    } catch (error) {
+        showMessage(message, error.message);
+    }
+});
+
+// Delete student
+document.getElementById("Delete").addEventListener(
+    "click",
+    async function (event) {
+        event.preventDefault();
+
+        const code = deleteCodeInput.value.trim();
+
+        if (!code) {
+            showMessage(message, "Student code is required.");
+            return;
         }
-    });
+
+        try {
+            const data = await sendRequest(
+                `/students/${encodeURIComponent(code)}`,
+                { method: "DELETE" }
+            );
+
+            showMessage(message, data.Message, true);
+            deleteCodeInput.value = "";
+            await loadStudents();
+        } catch (error) {
+            showMessage(message, error.message);
+        }
+    }
+);
+
+setAuthState(false);

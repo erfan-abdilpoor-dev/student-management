@@ -1,62 +1,137 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="/static/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="theme-color" content="#f3f6fb">
+
+    <title>Student Management System</title>
+
+    <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
-    <h1>Hello From HTML!</h1>
-        <p>Form</p>
-        <form id="student-form" class="form">
-            <label for="StudentName">Name</label>
-            <input id="StudentName">
+    <header class="page-header">
+        <h1>Student Management System</h1>
+        <p>Manage student records in one place.</p>
+    </header>
 
-            <label for="StudentAge">Age</label>
-            <input id="StudentAge">
+    <main class="dashboard">
 
-            <label for="StudentCode">Code</label>
-            <input id="StudentCode">
+        <!-- Authentication -->
+        <section class="panel">
+            <h2>Account</h2>
 
-            <label for="StudentField">Field</label>
-            <input id="StudentField">
+            <form id="login-form">
+                <div class="field">
+                    <label for="login-username">Username</label>
+                    <input
+                        id="login-username"
+                        type="text"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
 
-            <button type="submit" id="SubmitStudent">Add Student</button>
-        </form>
+                <div class="field">
+                    <label for="login-password">Password</label>
+                    <input
+                        id="login-password"
+                        type="password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
 
-        <form id="update-form" class="update">
+                <button type="submit">Login</button>
+            </form>
 
-            <div class="field">
-                <label for="Student-Code">Student Code</label>
-                <input id="Student-Code">
+            <button type="button" id="logout-button">Logout</button>
+            <p id="auth-status" role="status" aria-live="polite">
+                Please Log In To Manage Students.
+            </p>
+            <div id="login-message" aria-live="polite"></div>
+        </section>
+
+        <!-- Student operations -->
+        <div id="management-area" hidden>
+        <section class="panel" id="add-student-panel">
+            <h2>Add Student</h2>
+
+            <form id="student-form" class="form">
+                <div class="field">
+                    <label for="StudentName">Name</label>
+                    <input id="StudentName" type="text" required>
+                </div>
+
+                <div class="field">
+                    <label for="StudentAge">Age</label>
+                    <input id="StudentAge" type="number" min="0" step="1" required>
+                </div>
+
+                <div class="field">
+                    <label for="StudentCode">Student Code</label>
+                    <input id="StudentCode" type="text" required>
+                </div>
+
+                <div class="field">
+                    <label for="StudentField">Field</label>
+                    <input id="StudentField" type="text" required>
+                </div>
+
+                <button type="submit" id="SubmitStudent">
+                    Add Student
+                </button>
+            </form>
+        </section>
+
+        <section class="panel" id="update-student-panel">
+            <h2>Update Student</h2>
+
+            <form id="update-form" class="update">
+                <div class="field">
+                    <label for="Student-Code">Student Code</label>
+                    <input id="Student-Code" type="text" required>
+                </div>
+
+                <div class="field">
+                    <label for="student-age">New Student Age</label>
+                    <input id="student-age" type="number" min="0" step="1" required>
+                </div>
+
+                <button type="submit" id="Update">
+                    Update
+                </button>
+            </form>
+        </section>
+
+        <section class="panel" id="delete-student-panel">
+            <h2>Delete Student</h2>
+
+            <div class="delete">
+                <div class="field">
+                    <label for="Delete-Student-Code">Student Code</label>
+                    <input id="Delete-Student-Code" type="text" required>
+                </div>
+
+                <button type="button" id="Delete">
+                    Delete
+                </button>
             </div>
+        </section>
 
-            <div class="field">
-                <label for="student-age">New Student Age</label>
-                <input id="student-age">
-            </div>
+        <!-- Status messages -->
+        <div id="flask-message" aria-live="polite"></div>
 
-            <button id="Update">Update</button>
-
-        </form>
-
-        <div class="delete">
-
-            <div class="field">
-                <label for="Delete-Student-Code">Student Code</label>
-                <input id="Delete-Student-Code">
-            </div>
-
-            <button type="submit" id="Delete">Delete</button>
-
+        <!-- Student records -->
+        <section class="student-section" id="student-section">
+            <h2>Student List</h2>
+            <div id="students-list"></div>
+        </section>
         </div>
+    </main>
 
-        <h2>Student List</h2>
-        <div id="students-list"></div>
-
-        <div id="flask-message"></div>
-
-        <script src="/static/Script.js"></script>
+    <script src="/static/Script.js"></script>
 </body>
 </html>

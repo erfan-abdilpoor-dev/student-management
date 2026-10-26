@@ -1,85 +1,292 @@
-body {
-    background: #f2f2f2;
-    font-family: Arial, sans-serif;
-    margin: 30px;
+
+/* =========================
+   1. Global styles
+========================= */
+
+* {
+    box-sizing: border-box;
 }
+
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --background: #f3f6fb;
+    --surface: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --danger: #dc2626;
+    --danger-hover: #b91c1c;
+    --success-bg: #dcfce7;
+    --success-text: #166534;
+    --error-bg: #fee2e2;
+    --error-text: #991b1b;
+}
+
+body {
+    margin: 0;
+    padding: 32px;
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* =========================
+   2. Page header
+========================= */
+
+.page-header {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+}
+
+.page-header h1 {
+    margin: 0;
+    color: #173b67;
+    font-size: 30px;
+    line-height: 1.3;
+}
+
+.page-header p {
+    margin: 8px 0 0;
+    color: var(--muted);
+}
+
+/* =========================
+   3. Main dashboard
+========================= */
+
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 20px;
+}
+
+/* =========================
+   4. Panels and headings
+========================= */
+
+.panel {
+    min-width: 0;
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(30, 41, 59, 0.06);
+}
+
+.panel h2,
+.student-section h2 {
+    margin: 0 0 16px;
+    color: #24476b;
+    font-size: 20px;
+}
+
+/* =========================
+   5. Forms and fields
+========================= */
 
 .form,
 .update,
-.delete {
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    width: 320px;
-    box-sizing: border-box;
-}
-
-.form {
+.delete,
+#login-form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-}
-
-.form input,
-.update input,
-.delete input {
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-.form button,
-.update button,
-.delete button {
-    padding: 9px;
-    margin-top: 5px;
-    cursor: pointer;
+    gap: 12px;
 }
 
 .field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
+    min-width: 0;
 }
 
-.student-card {
-    background:white;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    width: 300px;
-    box-sizing: border-box;
-    transition: 0.2s;
+label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--text);
+    font: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+/* =========================
+   6. Buttons
+========================= */
+
+button {
+    width: 100%;
+    padding: 11px 14px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.16);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#logout-button {
+    margin-top: 10px;
+    background: #64748b;
+}
+
+#logout-button:hover {
+    background: #475569;
+}
+
+#Delete {
+    background: var(--danger);
+}
+
+#Delete:hover {
+    background: var(--danger-hover);
+}
+
+/* =========================
+   7. Student list
+========================= */
+
+.student-section {
+    grid-column: 1 / -1;
+    min-width: 0;
+    margin-top: 4px;
 }
 
 #students-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 260px), 1fr)
+    );
+    gap: 16px;
+    margin-top: 16px;
 }
 
-#student-list {
-    margin-top: 15px;
+.student-card {
+    min-width: 0;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(30, 41, 59, 0.05);
+    overflow-wrap: anywhere;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .student-card:hover {
-    transform:translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.10);
+}
+
+.student-card h3 {
+    margin: 0 0 10px;
+    color: var(--primary);
+    font-size: 17px;
+}
+
+.student-card p {
+    margin: 5px 0;
+    color: #475569;
+}
+
+/* =========================
+   8. Status messages
+========================= */
+
+#flask-message,
+#login-message {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.success,
+.error {
+    padding: 10px 14px;
+    margin-top: 10px;
+    border-radius: 8px;
 }
 
 .success {
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 8px;
-    background: #d4edda;
-    color: #155724;
+    background: var(--success-bg);
+    color: var(--success-text);
+    border: 1px solid #bbf7d0;
 }
 
 .error {
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 8px;
-    background: #f8d7da;
-    color: #721e24;
+    background: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid #fecaca;
+}
+
+/* =========================
+   9. Responsive layout
+========================= */
+
+@media (max-width: 760px) {
+    body {
+        padding: 18px;
+    }
+
+    .dashboard {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .student-section {
+        grid-column: auto;
+    }
+
+    .page-header h1 {
+        font-size: 25px;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+}
+.locked {
+    opacity: 0.65;
+}
+
+button:disabled,
+input:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+button:disabled:hover {
+    transform: none;
+    box-shadow: none;
 }
